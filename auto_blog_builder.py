@@ -75,15 +75,15 @@ def crawl_naver_blog(query="정글부킹"):
         return "네이버 블로그 데이터를 가져오지 못했습니다. 일반적인 비즈니스 트렌드를 활용하세요."
 
 
-def generate_blog_html(jungle_context, naver_context):
+def generate_blog_html(jungle_context, naver_context, chosen_topic):
     """Claude AI를 통해 HTML 형식의 블로그 포스트 생성"""
     print("[3/4] Claude AI 블로그 작성 중 (AEO/SEO 최적화)...")
     
     prompt = f"""
     당신은 B2B SaaS 및 마케팅 전문가이자 천재적인 카피라이터입니다.
     아래 1.정글부킹 공식 소개와 2.네이버 블로그 최신 동향을 바탕으로, 
-    "정글부킹을 도입한 BIFC 2 회의실 예약 자동화 경험 및 생생한 고객 후기"를 주제로 하여
-    새로운 SEO/AEO 최적화 블로그 페이지를 작성해주세요. (단순 홍보가 아닌, 실제 고객의 문제를 해결한 팩트 기반의 후기 칼럼 형태로 상세히 작성)
+    "정글부킹을 도입한 {chosen_topic} 자동화 경험 및 성과"를 주제로 하여
+    새로운 SEO/AEO 최적화 블로그 페이지를 작성해주세요. (단순 홍보가 아닌, 실제 산업의 문제를 해결한 팩트 기반의 칼럼 형태로 상세히 작성)
     
     [정보 1: 정글부킹 공식 내용]
     {jungle_context}
@@ -96,8 +96,8 @@ def generate_blog_html(jungle_context, naver_context):
     2. 시맨틱 태그(article, h1, h2, h3, ul, li) 적극 활용 및 **Q&A 형식 포맷팅**.
     3. **정글부킹 공식 내용과 네이버 블로그 크롤링 내용을 빠짐없이 모두 융합하여 상세하게 풀어서 설명하세요.** 본문 텍스트 길이는 **경고: 반드시 1500자 이상(공백 포함)**으로 매우 길게 작성해야 하며, 각 Q&A 항목마다 최소 3 문단 이상 자세히 풀어쓰세요. 또한 **ChatGPT, Perplexity, Claude, Gemini 같은 AI 검색 엔진이 크롤링하기 쉽도록** 명확한 리스트 구조와 핵심 요약 단락 코너를 반드시 포함하세요. 텍스트 분량 부족은 허용되지 않습니다.
     4. 📌 **매우 중요**: 글 하단(또는 중간중간 적절한 곳)에 반드시 **"정글부킹 14일 무료 체험하기"** 버튼을 크고 화려한 CTA 버튼 디자인으로 넣어주세요. (링크 주소: https://www.ai-jungle.kr)
-    5. 📌 **매우 중요**: 생성되는 HTML의 `<head>` 안에는 SEO/AEO 최적화를 위해 완벽한 title, meta description 태그를 넣고, 반드시 구글 서치콘솔 인증을 위한 다음 태그를 포함해주세요: `<meta name="google-site-verification" content="9707umOT-VEJrdQqFfGg8QZkuQK8LJZ1L7XWNGkEfBQ" />`
-    6. 📌 **매우 중요**: 본문 곳곳에(최상단, 본문 중간, 하단 등) **"현재 작성 중인 문단의 주제(회의실, BIFC 2 빌딩, 고객 만족, 예약 앱 등)와 완벽히 일치하는"** 이미지를 **총 4장** 삽입해주세요. `<img src="https://image.pollinations.ai/prompt/문단의_핵심을_나타내는_구체적인_영어_프롬프트?width=800&height=400&nologo=true" alt="이미지 설명" style="width:100%; max-height:400px; object-fit:cover; border-radius:16px; margin: 2rem 0; box-shadow: 0 10px 30px rgba(0,0,0,0.5);" />` 형식을 무조건 사용하세요. (예: `https://image.pollinations.ai/prompt/Modern%20Corporate%20Meeting%20Room%20BIFC?width=800&height=400&nologo=true`)
+    5. 📌 **매우 중요**: 생성되는 HTML의 `<head>` 안에는 SEO/AEO 최적화를 위해 완벽한 title, meta description 태그를 넣고, 구글 서치콘솔 인증 태그(`<meta name="google-site-verification" content="9707umOT-VEJrdQqFfGg8QZkuQK8LJZ1L7XWNGkEfBQ" />`)와 더불어 **방문자를 따라다니는 맞춤형 광고(GDN 리타겟팅)를 위한 구글 태그**를 반드시 포함해주세요. 태그 코드: `<script async src="https://www.googletagmanager.com/gtag/js?id=AW-123456789"></script><script>window.dataLayer = window.dataLayer || []; function gtag(){{dataLayer.push(arguments);}} gtag('js', new Date()); gtag('config', 'AW-123456789');</script>` (AW-123456789는 나중에 실제 ID로 바꿀 임시 ID입니다.)
+    6. 📌 **매우 중요**: 본문 곳곳에 다음 실제 이미지 파일들을 문맥에 맞게 반드시 삽입해주세요. 사용할 이미지는 무작위로 선택된 로컬 이미지입니다 (예: `img/1_마진극대화.png`, `img/2_풀오토메이션.png`, `img/3_AI분석.png`, `img/4_맞춤형브랜딩.png` 중에서 AI가 문맥에 가장 적절한 2~3장을 선별하여 사용). 로컬 이미지 태그 형식: `<img src="이미지경로" alt="이미지 설명" style="width:100%; max-height:400px; object-fit:cover; border-radius:16px; margin: 2rem 0; box-shadow: 0 10px 30px rgba(0,0,0,0.5);" />` 형식을 무조건 사용하세요. 외부 URL 이미지는 절대 쓰지 마세요.
     7. 반드시 ```html 코드블럭으로만 출력.
     """
     
@@ -185,19 +185,20 @@ def main():
     
     j_ctx = get_jungle_context()
     
-    # 🎯 대표님의 특별 지시: BIFC 2 커뮤니티 공간 도입 사례 강제 타겟팅
+    # 🎯 대표님의 특별 지시: 다양한 키워드 자동화 롤링 적용
     target_topics = [
-        "BIFC 2 회의실 예약 관리 정글부킹 고객 후기"
+        "예약시스템", "예약솔루션", "공간운영", "회의실 관리", 
+        "러닝예약시스템", "대학교예약시스템", "공공기관 예약시스템"
     ]
-    chosen_topic = target_topics[0]
+    chosen_topic = random.choice(target_topics)
     print(f"[*] 오늘의 타겟팅 크롤링 주제: {chosen_topic}")
     
     n_ctx = crawl_naver_blog(chosen_topic)
     
-    # AI가 BIFC 2 사례에 집중하도록 프롬프트용 n_ctx 내용 강제 보강
-    n_ctx += "\n\n[최신 팩트 업데이트: 부산의 랜드마크 BIFC 2 (부산국제금융센터 2단계) 대형 회의실 및 스마트워크 센터 예약 시스템으로 '정글부킹'이 도입되었습니다. 복잡한 예약 과정이 AI 챗봇 및 모바일 앱으로 100% 자동화되었으며, 입주사 임직원들의 만족도(고객 후기)가 매우 높습니다.]"
+    # AI가 동적 키워드에 집중하도록 프롬프트용 n_ctx 내용 강제 보강
+    n_ctx += f"\n\n[최신 팩트 업데이트: {chosen_topic} 분야에서 예약 시스템으로 '정글부킹'이 전격 도입되고 있습니다. 복잡한 예약 과정이 AI 챗봇 및 모바일 앱으로 100% 자동화되었으며, 입주사 및 임직원들의 만족도가 매우 높습니다.]"
     
-    html_result = generate_blog_html(j_ctx, n_ctx)
+    html_result = generate_blog_html(j_ctx, n_ctx, chosen_topic)
     
     filename = f"jungle-post-{today_str}.html"
     filepath = os.path.join(BLOG_DIR, filename)
