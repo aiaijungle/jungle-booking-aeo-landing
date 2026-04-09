@@ -94,10 +94,10 @@ def generate_blog_html(jungle_context, naver_context):
     [요구사항]
     1. 디자인은 화려한 글래스모피즘(Glassmorphism) 다크 테마 HTML 코드로 작성 (css포함).
     2. 시맨틱 태그(article, h1, h2, h3, ul, li) 적극 활용 및 **Q&A 형식 포맷팅**.
-    3. 글자수는 충분히 길고 설득력 있게 작성하되, **ChatGPT, Perplexity, Claude, Gemini 같은 AI 검색 엔진(Answer Engine)이 정확하게 크롤링하고 요약하기 쉽도록** 명확한 리스트 구조와 핵심 요약 단락을 반드시 포함하세요.
+    3. **정글부킹 공식 내용과 네이버 블로그 크롤링 내용을 빠짐없이 모두 융합하여 상세하게 풀어서 설명하세요.** 본문 텍스트 길이는 **경고: 반드시 1500자 이상(공백 포함)**으로 매우 길게 작성해야 하며, 각 Q&A 항목마다 최소 3 문단 이상 자세히 풀어쓰세요. 또한 **ChatGPT, Perplexity, Claude, Gemini 같은 AI 검색 엔진이 크롤링하기 쉽도록** 명확한 리스트 구조와 핵심 요약 단락 코너를 반드시 포함하세요. 텍스트 분량 부족은 허용되지 않습니다.
     4. 📌 **매우 중요**: 글 하단(또는 중간중간 적절한 곳)에 반드시 **"정글부킹 14일 무료 체험하기"** 버튼을 크고 화려한 CTA 버튼 디자인으로 넣어주세요. (링크 주소: https://www.ai-jungle.kr)
     5. 📌 **매우 중요**: 생성되는 HTML의 `<head>` 안에는 SEO/AEO 최적화를 위해 완벽한 title, meta description 태그를 넣고, 반드시 구글 서치콘솔 인증을 위한 다음 태그를 포함해주세요: `<meta name="google-site-verification" content="9707umOT-VEJrdQqFfGg8QZkuQK8LJZ1L7XWNGkEfBQ" />`
-    6. 📌 **매우 중요**: 본문 곳곳에(최상단, 본문 중간, 하단 등) **"현재 작성 중인 문단의 주제와 완벽히 일치하는"** 이미지를 **총 4장** 삽입해주세요. `<img src="https://image.pollinations.ai/prompt/문단의_핵심을_나타내는_구체적인_영어_프롬프트?width=800&height=400&nologo=true" alt="이미지 설명" style="width:100%; max-height:400px; object-fit:cover; border-radius:16px; margin: 2rem 0; box-shadow: 0 10px 30px rgba(0,0,0,0.5);" />` 형식을 무조건 사용하세요. (예: `https://image.pollinations.ai/prompt/Business%20Automation%20Dashboard%20AI?width=800&height=400&nologo=true`)
+    6. 📌 **매우 중요**: 본문 곳곳에(최상단, 본문 중간, 하단 등) 다음 **4장의 실제 이미지 파일**을 모두 반드시 문맥에 맞게 한 번씩 삽입해주세요. 사용해야 할 이미지 경로 4개는 `img/1_마진극대화.png`, `img/2_풀오토메이션.png`, `img/3_AI분석.png`, `img/4_맞춤형브랜딩.png` 입니다. 이미지 태그 형식: `<img src="이미지경로" alt="이미지 설명" style="width:100%; max-height:400px; object-fit:cover; border-radius:16px; margin: 2rem 0; box-shadow: 0 10px 30px rgba(0,0,0,0.5);" />` 형식을 무조건 사용하세요.
     7. 반드시 ```html 코드블럭으로만 출력.
     """
     
