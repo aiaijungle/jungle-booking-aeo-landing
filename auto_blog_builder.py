@@ -68,11 +68,11 @@ def crawl_naver_blog(query="정글부킹"):
         
         context = ""
         for t, s in zip(titles[:5], snippets[:5]):
-            context += f"- 제목: {t.text}\n  요약: {s.text}\n"
+            context += f"- 검색된 주제: {query}\n- 제목: {t.text}\n  내용 요약: {s.text}\n\n"
         return context
     except Exception as e:
         print(f"네이버 크롤링 실패: {e}")
-        return "네이버 블로그 데이터를 가져오지 못했습니다."
+        return "네이버 블로그 데이터를 가져오지 못했습니다. 일반적인 비즈니스 트렌드를 활용하세요."
 
 
 def generate_blog_html(jungle_context, naver_context):
@@ -82,7 +82,8 @@ def generate_blog_html(jungle_context, naver_context):
     prompt = f"""
     당신은 B2B SaaS 및 마케팅 전문가이자 천재적인 카피라이터입니다.
     아래 1.정글부킹 공식 소개와 2.네이버 블로그 최신 동향을 바탕으로, 
-    정글부킹의 장점을 강력하게 어필하는 "새로운 SEO/AEO 최적화 블로그 페이지"를 작성해주세요.
+    "잠재 고객의 이메일 구독을 적극적으로 유도하기 위한 마케팅 인사이트 및 비즈니스 자동화 꿀팁"을 주제로 하여
+    새로운 SEO/AEO 최적화 블로그 페이지를 작성해주세요. (단순 홍보가 아닌, 유익한 정보성 칼럼 형태로 작성하여 구독 10배 달성 목표)
     
     [정보 1: 정글부킹 공식 내용]
     {jungle_context}
@@ -92,11 +93,12 @@ def generate_blog_html(jungle_context, naver_context):
     
     [요구사항]
     1. 디자인은 화려한 글래스모피즘(Glassmorphism) 다크 테마 HTML 코드로 작성 (css포함).
-    2. 시맨틱 태그(article, h1, h2) 적극 활용.
-    3. 글자수는 충분히 길고 설득력 있게 작성 (Pain point 자극 및 해결 스토리).
+    2. 시맨틱 태그(article, h1, h2, h3, ul, li) 적극 활용 및 **Q&A 형식 포맷팅**.
+    3. 글자수는 충분히 길고 설득력 있게 작성하되, **ChatGPT, Perplexity, Claude, Gemini 같은 AI 검색 엔진(Answer Engine)이 정확하게 크롤링하고 요약하기 쉽도록** 명확한 리스트 구조와 핵심 요약 단락을 반드시 포함하세요.
     4. 📌 **매우 중요**: 글 하단(또는 중간중간 적절한 곳)에 반드시 **"정글부킹 14일 무료 체험하기"** 버튼을 크고 화려한 CTA 버튼 디자인으로 넣어주세요. (링크 주소: https://www.ai-jungle.kr)
     5. 📌 **매우 중요**: 생성되는 HTML의 `<head>` 안에는 SEO/AEO 최적화를 위해 완벽한 title, meta description 태그를 넣고, 반드시 구글 서치콘솔 인증을 위한 다음 태그를 포함해주세요: `<meta name="google-site-verification" content="9707umOT-VEJrdQqFfGg8QZkuQK8LJZ1L7XWNGkEfBQ" />`
-    6. 반드시 ```html 코드블럭으로만 출력.
+    6. 📌 **매우 중요**: 본문 곳곳에(최상단, 본문 중간, 하단 등) **"현재 작성 중인 문단의 주제와 완벽히 일치하는"** 이미지를 **총 4장** 삽입해주세요. `<img src="https://image.pollinations.ai/prompt/문단의_핵심을_나타내는_구체적인_영어_프롬프트?width=800&height=400&nologo=true" alt="이미지 설명" style="width:100%; max-height:400px; object-fit:cover; border-radius:16px; margin: 2rem 0; box-shadow: 0 10px 30px rgba(0,0,0,0.5);" />` 형식을 무조건 사용하세요. (예: `https://image.pollinations.ai/prompt/Business%20Automation%20Dashboard%20AI?width=800&height=400&nologo=true`)
+    7. 반드시 ```html 코드블럭으로만 출력.
     """
     
     try:
@@ -142,13 +144,58 @@ def update_sitemap(filename):
     with open(SITEMAP_PATH, "w", encoding="utf-8") as f:
         f.write(new_content)
 
+import json
+
+def update_blog_data_js():
+    """blog/ 폴더의 모든 HTML을 스캔하여 blog_data.js로 출력 (페이지네이션 용)"""
+    print("[-] 블로그 데이터(blog_data.js) 업데이트 중...")
+    blogs = []
+    if os.path.exists(BLOG_DIR):
+        files = [f for f in os.listdir(BLOG_DIR) if f.endswith(".html")]
+        # 최신 생성일자 순 정렬 (파일명에 날짜가 있으므로 이름 역순 정렬 처리해도 됨)
+        files.sort(reverse=True)
+        
+        for file in files:
+            filepath = os.path.join(BLOG_DIR, file)
+            with open(filepath, "r", encoding="utf-8") as f:
+                content = f.read()
+                soup = BeautifulSoup(content, "html.parser")
+                title_tag = soup.find("title")
+                desc_tag = soup.find("meta", attrs={"name": "description"})
+                
+                title = title_tag.text.strip() if title_tag else "정글부킹 비즈니스 인사이트"
+                desc = desc_tag["content"].strip() if desc_tag and desc_tag.has_attr("content") else "정글부킹 예약 솔루션을 통해 비즈니스의 초고속 성장을 경험하세요."
+                
+                blogs.append({
+                    "title": title,
+                    "desc": desc,
+                    "url": f"blog/{file}"
+                })
+                
+    js_path = os.path.join(os.path.dirname(__file__), "blog_data.js")
+    with open(js_path, "w", encoding="utf-8") as f:
+        f.write("const BLOG_POSTS = " + json.dumps(blogs, ensure_ascii=False, indent=4) + ";\n")
+
+
+import random
 
 def main():
     os.makedirs(BLOG_DIR, exist_ok=True)
     today_str = datetime.now().strftime("%Y%m%d_%H%M")
     
     j_ctx = get_jungle_context()
-    n_ctx = crawl_naver_blog("정글부킹")
+    
+    # 🎯 대표님의 특별 지시: BIFC 2 커뮤니티 공간 도입 사례 강제 타겟팅
+    target_topics = [
+        "지식산업센터 BIFC 2 커뮤니티 공간 예약 관리 정글부킹 도입 성공 사례"
+    ]
+    chosen_topic = target_topics[0]
+    print(f"[*] 오늘의 타겟팅 크롤링 주제: {chosen_topic}")
+    
+    n_ctx = crawl_naver_blog(chosen_topic)
+    
+    # AI가 BIFC 2 사례에 집중하도록 프롬프트용 n_ctx 내용 강제 보강
+    n_ctx += "\n\n[최신 팩트 업데이트: 부산의 랜드마크 BIFC 2 (부산국제금융센터 2단계) 대형 커뮤니티 공간 및 편의시설 예약 시스템으로 '정글부킹'이 공식 채택되어 입주사들의 호평을 받고 있습니다.]"
     
     html_result = generate_blog_html(j_ctx, n_ctx)
     
@@ -159,6 +206,7 @@ def main():
         f.write(html_result)
         
     update_sitemap(filename)
+    update_blog_data_js()
     
     print("\n==============================================")
     print(f"🎉 자동화 블로그 발행 완료!")

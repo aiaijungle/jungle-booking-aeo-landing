@@ -461,29 +461,92 @@
             </article>
         </section>
 
-        <!-- Auto-Generated AEO Blog Posts Section -->
+        <!-- Auto-Generated AEO Blog Posts Section with Pagination -->
         <section class="container" id="latest-blogs" style="padding-top: 4rem; padding-bottom: 4rem;">
             <article>
                 <h2>정글부킹 최신 비즈니스 인사이트</h2>
-                <p class="section-subtitle">인공지능 마케팅과 비즈니스 예약 자동화 트렌드를 확인하세요.</p>
+                <p class="section-subtitle">인공지능 마케팅과 비즈니스 예약 자동화 트렌드를 확인하고 구독하세요!</p>
                 
-                <div class="features-grid">
-                    <!-- Blog 1 -->
-                    <a href="blog/jungle-post-20260409_1718.html" class="glass-panel" style="text-decoration: none; display: block;">
-                        <span style="color: var(--secondary); font-size: 0.8rem; font-weight: 700; letter-spacing: 1px;">NEW</span>
-                        <h3 class="feature-title" style="margin-top: 0.5rem; font-size: 1.3rem;">정글부킹 - AI 기반 올인원 예약 관리 솔루션</h3>
-                        <p class="feature-desc">엑셀과 수동 문자로 허비되는 시간을 획기적으로 줄여줄 AI 솔루션의 놀라운 혜택을 알아봅니다.</p>
-                    </a>
-                    
-                    <!-- Blog 2 -->
-                    <a href="blog/jungle-post-20260409_1717.html" class="glass-panel" style="text-decoration: none; display: block;">
-                        <span style="color: var(--primary-light); font-size: 0.8rem; font-weight: 700; letter-spacing: 1px;">INSIGHT</span>
-                        <h3 class="feature-title" style="margin-top: 0.5rem; font-size: 1.3rem;">정글부킹: 혁신적인 에약 관리의 비결</h3>
-                        <p class="feature-desc">예약 관리를 넘어 데이터 중심의 마케팅 전략과 구체적인 성장 사례들을 지금 경험해보세요.</p>
-                    </a>
+                <div id="blog-grid" class="features-grid">
+                    <!-- Javascript will inject blogs here -->
+                </div>
+
+                <div id="pagination" style="text-align: center; margin-top: 3rem; display: flex; justify-content: center; gap: 10px;">
+                    <!-- Javascript will inject pagination buttons here -->
                 </div>
             </article>
         </section>
+
+        <script src="blog_data.js"></script>
+        <script>
+            let currentPage = 1;
+            const itemsPerPage = 6;
+
+            function renderBlogs() {
+                const blogGrid = document.getElementById('blog-grid');
+                blogGrid.innerHTML = '';
+
+                if (typeof BLOG_POSTS === 'undefined' || BLOG_POSTS.length === 0) {
+                    blogGrid.innerHTML = '<p style="color:#a0aec0; text-align:center; width:100%;">등록된 최신 블로그가 없습니다.</p>';
+                    return;
+                }
+
+                const startIndex = (currentPage - 1) * itemsPerPage;
+                const endIndex = startIndex + itemsPerPage;
+                const currentBlogs = BLOG_POSTS.slice(startIndex, endIndex);
+
+                currentBlogs.forEach((blog, index) => {
+                    const badgeText = (startIndex === 0 && index === 0) ? 'NEW' : 'INSIGHT';
+                    const badgeColor = (startIndex === 0 && index === 0) ? 'var(--secondary)' : 'var(--primary-light)';
+
+                    const html = `
+                    <a href="${blog.url}" class="glass-panel" style="text-decoration: none; display: block;">
+                        <span style="color: ${badgeColor}; font-size: 0.8rem; font-weight: 700; letter-spacing: 1px;">${badgeText}</span>
+                        <h3 class="feature-title" style="margin-top: 0.5rem; font-size: 1.3rem;">${blog.title}</h3>
+                        <p class="feature-desc">${blog.desc.length > 70 ? blog.desc.substring(0, 70) + '...' : blog.desc}</p>
+                    </a>`;
+                    blogGrid.insertAdjacentHTML('beforeend', html);
+                });
+
+                renderPagination();
+            }
+
+            function renderPagination() {
+                const paginationDiv = document.getElementById('pagination');
+                paginationDiv.innerHTML = '';
+                if (typeof BLOG_POSTS === 'undefined' || BLOG_POSTS.length <= itemsPerPage) return;
+
+                const totalPages = Math.ceil(BLOG_POSTS.length / itemsPerPage);
+
+                for (let i = 1; i <= totalPages; i++) {
+                    const btn = document.createElement('button');
+                    btn.innerText = i;
+                    btn.style.padding = '8px 16px';
+                    btn.style.border = 'none';
+                    btn.style.borderRadius = '5px';
+                    btn.style.cursor = 'pointer';
+                    btn.style.fontSize = '1.1rem';
+                    btn.style.fontWeight = 'bold';
+                    
+                    if (i === currentPage) {
+                        btn.style.background = 'var(--secondary)';
+                        btn.style.color = '#000';
+                    } else {
+                        btn.style.background = 'rgba(255,255,255,0.1)';
+                        btn.style.color = '#fff';
+                    }
+
+                    btn.onclick = () => {
+                        currentPage = i;
+                        renderBlogs();
+                        document.getElementById('latest-blogs').scrollIntoView({ behavior: 'smooth' });
+                    };
+                    paginationDiv.appendChild(btn);
+                }
+            }
+
+            window.addEventListener('DOMContentLoaded', renderBlogs);
+        </script>
 
         <!-- AEO Optimized FAQ Section -->
         <section class="container" id="faq">
