@@ -1,4 +1,4 @@
 User-agent: *
 Allow: /
 
-Sitemap: https://landing.ai-jungle.kr/sitemap.xml
+Sitemap: https://aiaijungle.github.io/jungle-booking-aeo-landing/sitemap.xml
